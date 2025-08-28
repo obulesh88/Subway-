@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subway Surfers Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            width: 800px;
+            max-width: 95%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-header {
+            background: linear-gradient(to right, #ff8a00, #da1b60);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            font-size: 1.2rem;
+        }
+        
+        .game-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        canvas {
+            background: #0d1b2a;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .game-controls {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(to right, #00b4db, #0083b0);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-start {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+        }
+        
+        .btn-reset {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+        
+        .instructions {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 5px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #ff8a00;
+        }
+        
+        .instructions ul {
+            list-style-type: none;
+            padding-left: 10px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instructions li:before {
+            content: "•";
+            color: #ff8a00;
+            font-weight: bold;
+            display: inline-block;
+            width: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 138, 0, 0.5);
+        }
+        
+        .modal h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ff8a00;
+        }
+        
+        .modal p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .high-score {
+            color: #ff8a00;
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+        
+        @keyframes moveBackground {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 100% 0;
+            }
+        }
+        
+        .moving-bg {
+            animation: moveBackground 20s linear infinite;
+        }
+    </style>
+</head>
+<body class="moving-bg">
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="game-title">SUBWAY SURFERS</h1>
+        </div>
+        
+        <div class="game-stats">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="coins">Coins: <span id="coins">0</span></div>
+            <div class="high-score">High Score: <span id="high-score">0</span></div>
+        </div>
+        
+        <div class="game-canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+        
+        <div class="game-controls">
+            <button class="btn btn-start" id="startBtn">Start Game</button>
+            <button class="btn" id="pauseBtn">Pause</button>
+            <button class="btn btn-reset" id="resetBtn">Reset</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to Play</h3>
+            <ul>
+                <li>Press LEFT and RIGHT keys to move character between lanes</li>
+                <li>Press UP key to jump over obstacles</li>
+                <li>Press DOWN key to roll under barriers</li>
+                <li>Collect coins to increase your score</li>
+                <li>Avoid obstacles and trains to stay in the game</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="modal" id="startModal">
+        <div class="modal-content">
+            <h2>SUBWAY SURFERS</h2>
+            <p>Escape from the inspector and his dog! Run as far as you can and collect coins.</p>
+            <p>Press START to begin your adventure!</p>
+            <p class="high-score">High Score: <span id="modal-high-score">0</span></p>
+            <button class="btn btn-start" id="modalStartBtn">START GAME</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            const startBtn = document.getElementById('startBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const scoreElement = document.getElementById('score');
+            const coinsElement = document.getElementById('coins');
+            const highScoreElement = document.getElementById('high-score');
+            const modalHighScoreElement = document.getElementById('modal-high-score');
+            const startModal = document.getElementById('startModal');
+            const modalStartBtn = document.getElementById('modalStartBtn');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            
+            // Game state
+            let game = {
+                running: false,
+                score: 0,
+                coins: 0,
+                highScore: 0,
+                speed: 5,
+                lanes: [canvas.width/4, canvas.width/2, 3*canvas.width/4],
+                currentLane: 1,
+                obstacles: [],
+                coinsList: [],
+                lastTimestamp: 0
+            };
+            
+            // Load high score from localStorage
+            if (localStorage.getItem('highScore')) {
+                game.highScore = parseInt(localStorage.getItem('highScore'));
+                highScoreElement.textContent = game.highScore;
+                modalHighScoreElement.textContent = game.highScore;
+            }
+            
+            // Player character
+            const player = {
+                x: game.lanes[game.currentLane],
+                y: canvas.height - 100,
+                width: 40,
+                height: 60,
+                color: '#FF8A00',
+                isJumping: false,
+                isRolling: false,
+                jumpHeight: 120,
+                jumpSpeed: 0,
+                rollTime: 0
+            };
+            
+            // Show start modal initially
+            startModal.style.display = 'flex';
+            
+            // Event listeners
+            modalStartBtn.addEventListener('click', startGame);
+            startBtn.addEventListener('click', startGame);
+            pauseBtn.addEventListener('click', togglePause);
+            resetBtn.addEventListener('click', resetGame);
+            
+            window.addEventListener('keydown', function(e) {
+                if (!game.running) return;
+                
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        if (game.currentLane > 0) game.currentLane--;
+                        break;
+                    case 'ArrowRight':
+                        if (game.currentLane < 2) game.currentLane++;
+                        break;
+                    case 'ArrowUp':
+                        if (!player.isJumping && !player.isRolling) {
+                            player.isJumping = true;
+                            player.jumpSpeed = -15;
+                        }
+                        break;
+                    case 'ArrowDown':
+                        if (!player.isJumping && !player.isRolling) {
+                            player.isRolling = true;
+                            player.rollTime = 0;
+                        }
+                        break;
+                }
+            });
+            
+            function startGame() {
+                game.running = true;
+                game.score = 0;
+                game.coins = 0;
+                game.speed = 5;
+                game.obstacles = [];
+                game.coinsList = [];
+                player.x = game.lanes[game.currentLane];
+                player.y = canvas.height - 100;
+                player.isJumping = false;
+                player.isRolling = false;
+                
+                scoreElement.textContent = game.score;
+                coinsElement.textContent = game.coins;
+                
+                startModal.style.display = 'none';
+                requestAnimationFrame(gameLoop);
+            }
+            
+            function togglePause() {
+                game.running = !game.running;
+                if (game.running) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            function resetGame() {
+                game.running = false;
+                game.score = 0;
+                game.coins = 0;
+                game.obstacles = [];
+                game.coinsList = [];
+                
+                scoreElement.textContent = game.score;
+                coinsElement.textContent = game.coins;
+                
+                startModal.style.display = 'flex';
+            }
+            
+            function gameLoop(timestamp) {
+                if (!game.running) return;
+                
+                const deltaTime = timestamp - game.lastTimestamp;
+                game.lastTimestamp = timestamp;
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background
+                drawBackground();
+                
+                // Update and draw player
+                updatePlayer(deltaTime);
+                drawPlayer();
+                
+                // Generate obstacles and coins
+                if (Math.random() < 0.02) {
+                    generateObstacle();
+                }
+                
+                if (Math.random() < 0.03) {
+                    generateCoin();
+                }
+                
+                // Update and draw obstacles
+                updateObstacles();
+                drawObstacles();
+                
+                // Update and draw coins
+                updateCoins();
+                drawCoins();
+                
+                // Check collisions
+                checkCollisions();
+                
+                // Increase score and difficulty
+                game.score += 1;
+                scoreElement.textContent = Math.floor(game.score / 10);
+                
+                if (game.score % 500 === 0) {
+                    game.speed += 0.5;
+                }
+                
+                // Continue game loop
+                requestAnimationFrame(gameLoop);
+            }
+            
+            function drawBackground() {
+                // Draw sky
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+                
+                // Draw ground
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+                
+                // Draw lanes
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([20, 15]);
+                
+                for (let lane of game.lanes) {
+                    ctx.beginPath();
+                    ctx.moveTo(lane, canvas.height / 2);
+                    ctx.lineTo(lane, canvas.height);
+                    ctx.stroke();
+                }
+                
+                ctx.setLineDash([]);
+            }
+            
+            function updatePlayer(deltaTime) {
+                // Move player to current lane
+                player.x += (game.lanes[game.currentLane] - player.x) * 0.2;
+                
+                // Handle jumping
+                if (player.isJumping) {
+                    player.y += player.jumpSpeed;
+                    player.jumpSpeed += 0.8;
+                    
+                    if (player.y >= canvas.height - 100) {
+                        player.y = canvas.height - 100;
+                        player.isJumping = false;
+                        player.jumpSpeed = 0;
+                    }
+                }
+                
+                // Handle rolling
+                if (player.isRolling) {
+                    player.rollTime += deltaTime;
+                    if (player.rollTime > 1000) {
+                        player.isRolling = false;
+                    }
+                }
+            }
+            
+            function drawPlayer() {
+                ctx.save();
+                
+                if (player.isRolling) {
+                    // Draw rolling player (squashed)
+                    ctx.fillStyle = player.color;
+                    ctx.fillRect(player.x - player.width/2, player.y - player.height/3, player.width, player.height/1.5);
+                    
+                    // Draw details
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y - player.height/6, player.width/4, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Draw standing/jumping player
+                    ctx.fillStyle = player.color;
+                    ctx.fillRect(player.x - player.width/2, player.y - player.height, player.width, player.height);
+                    
+                    // Draw head
+                    ctx.fillStyle = '#FFAA50';
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y - player.height + 20, 15, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+            }
+            
+            function generateObstacle() {
+                const lane = Math.floor(Math.random() * 3);
+                const type = Math.random() > 0.5 ? 'train' : 'barrier';
+                
+                game.obstacles.push({
+                    x: game.lanes[lane],
+                    y: -50,
+                    width: type === 'train' ? 60 : 40,
+                    height: type === 'train' ? 80 : 70,
+                    type: type,
+                    lane: lane,
+                    color: type === 'train' ? '#FF4B2B' : '#FFCC00'
+                });
+            }
+            
+            function generateCoin() {
+                const lane = Math.floor(Math.random() * 3);
+                
+                game.coinsList.push({
+                    x: game.lanes[lane],
+                    y: -30,
+                    radius: 15,
+                    lane: lane,
+                    collected: false
+                });
+            }
+            
+            function updateObstacles() {
+                for (let i = game.obstacles.length - 1; i >= 0; i--) {
+                    const obstacle = game.obstacles[i];
+                    obstacle.y += game.speed;
+                    
+                    // Remove obstacles that are off screen
+                    if (obstacle.y > canvas.height + 100) {
+                        game.obstacles.splice(i, 1);
+                    }
+                }
+            }
+            
+            function drawObstacles() {
+                for (let obstacle of game.obstacles) {
+                    ctx.save();
+                    ctx.fillStyle = obstacle.color;
+                    
+                    if (obstacle.type === 'train') {
+                        // Draw train obstacle
+                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height, obstacle.width, obstacle.height);
+                        
+                        // Draw train windows
+                        ctx.fillStyle = '#1a2a6c';
+                        ctx.fillRect(obstacle.x - obstacle.width/3, obstacle.y - obstacle.height + 15, obstacle.width/3, 15);
+                        ctx.fillRect(obstacle.x + obstacle.width/6, obstacle.y - obstacle.height + 15, obstacle.width/3, 15);
+                    } else {
+                        // Draw barrier obstacle
+                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height, obstacle.width, obstacle.height/3);
+                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height + obstacle.height/2, obstacle.width, obstacle.height/3);
+                    }
+                    
+                    ctx.restore();
+                }
+            }
+            
+            function updateCoins() {
+                for (let i = game.coinsList.length - 1; i >= 0; i--) {
+                    const coin = game.coinsList[i];
+                    coin.y += game.speed;
+                    
+                    // Remove coins that are off screen
+                    if (coin.y > canvas.height + 100) {
+                        game.coinsList.splice(i, 1);
+                    }
+                }
+            }
+            
+            function drawCoins() {
+                for (let coin of game.coinsList) {
+                    if (coin.collected) continue;
+                    
+                    ctx.save();
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    ctx.arc(coin.x, coin.y, coin.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = '#B8860B';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    ctx.restore();
+                }
+            }
+            
+            function checkCollisions() {
+                // Player hitbox depends on state
+                let playerWidth = player.width;
+                let playerHeight = player.isRolling ? player.height/1.5 : player.height;
+                let playerY = player.isRolling ? player.y - player.height/3 : player.y - player.height;
+                
+                // Check obstacle collisions
+                for (let obstacle of game.obstacles) {
+                    if (obstacle.lane !== game.currentLane) continue;
+                    
+                    if (obstacle.y > playerY && obstacle.y - obstacle.height < playerY + playerHeight) {
+                        if (Math.abs(obstacle.x - player.x) < (obstacle.width/2 + playerWidth/2) * 0.7) {
+                            // Collision detected
+                            gameOver();
+                            return;
+                        }
+                    }
+                }
+                
+                // Check coin collisions
+                for (let coin of game.coinsList) {
+                    if (coin.collected) continue;
+                    if (coin.lane !== game.currentLane) continue;
+                    
+                    if (coin.y > playerY && coin.y < playerY + playerHeight) {
+                        if (Math.abs(coin.x - player.x) < (coin.radius + playerWidth/2) * 0.7) {
+                            coin.collected = true;
+                            game.coins += 1;
+                            coinsElement.textContent = game.coins;
+                        }
+                    }
+                }
+            }
+            
+            function gameOver() {
+                game.running = false;
+                
+                if (game.score > game.highScore) {
+                    game.highScore = game.score;
+                    localStorage.setItem('highScore', Math.floor(game.highScore / 10));
+                    highScoreElement.textContent = Math.floor(game.highScore / 10);
+                }
+                
+                startModal.style.display = 'flex';
+                modalHighScoreElement.textContent = Math.floor(game.highScore / 10);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            });
+        });
+    </script>
+</body>
+</html>
