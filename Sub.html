@@ -235,6 +235,15 @@
             border-top: 1px solid #30363d;
         }
 
+        .error-section {
+            background-color: #f85149;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -265,6 +274,12 @@
                 <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
             </ul>
         </nav>
+
+        <div class="error-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> 404 - File Not Found</h2>
+            <p>The site configured at this address does not contain the requested file.</p>
+            <p>If this is your site, make sure that the filename case matches the URL as well as any file permissions.</p>
+        </div>
 
         <div class="dashboard">
             <div class="card">
@@ -437,7 +452,7 @@
                 this.innerHTML = 'Processing...';
                 this.style.opacity = '0.8';
                 setTimeout(() => {
-                    this.innerHTML = this.innerHTML.replace('Processing...', 'Completed!');
+                    this.innerHTML = 'Completed!';
                     this.style.opacity = '1';
                     setTimeout(() => {
                         this.innerHTML = this.innerHTML.replace('Completed!', this.textContent.includes('Train') ? 'Train Model' : 
@@ -451,4 +466,4 @@
         });
     </script>
 </body>
-</html>
+                    </html>
