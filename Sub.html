@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subway Surfers Clone</title>
+    <title>Subway Surfers AI Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -11,626 +12,441 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            overflow: hidden;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
         }
-        
-        .game-container {
-            width: 800px;
-            max-width: 95%;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .game-header {
-            background: linear-gradient(to right, #ff8a00, #da1b60);
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            text-align: center;
-            position: relative;
         }
-        
-        .game-title {
+
+        header {
+            background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo {
             font-size: 2.5rem;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 2px;
-        }
-        
-        .game-stats {
+            margin-bottom: 10px;
             display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.4);
-            font-size: 1.2rem;
-        }
-        
-        .game-canvas-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-        }
-        
-        canvas {
-            background: #0d1b2a;
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .game-controls {
-            padding: 20px;
-            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 15px;
-            background: rgba(0, 0, 0, 0.4);
         }
-        
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+        .logo i {
+            font-size: 2.8rem;
         }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+
+        nav {
+            background-color: #161b22;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            border: 1px solid #30363d;
         }
-        
-        .btn:active {
-            transform: translateY(1px);
-        }
-        
-        .btn-start {
-            background: linear-gradient(to right, #00b09b, #96c93d);
-        }
-        
-        .btn-reset {
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-        }
-        
-        .instructions {
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            margin-top: 5px;
-            border-radius: 0 0 15px 15px;
-        }
-        
-        .instructions h3 {
-            margin-bottom: 10px;
-            color: #ff8a00;
-        }
-        
-        .instructions ul {
-            list-style-type: none;
-            padding-left: 10px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .instructions li:before {
-            content: "•";
-            color: #ff8a00;
-            font-weight: bold;
-            display: inline-block;
-            width: 20px;
-            font-size: 1.2rem;
-        }
-        
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+
+        nav ul {
             display: flex;
             justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #c9d1d9;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 10px 15px;
+            display: block;
+            border-radius: 6px;
+        }
+
+        nav ul li a:hover {
+            background-color: #238636;
+            color: white;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #161b22;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid #30363d;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
         }
-        
-        .modal-content {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 30px rgba(255, 138, 0, 0.5);
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #58a6ff;
         }
-        
-        .modal h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #ff8a00;
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: #238636;
         }
-        
-        .modal p {
+
+        .code-block {
+            background-color: #0d1117;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid #30363d;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .code-comment {
+            color: #8b949e;
+        }
+
+        .code-keyword {
+            color: #ff7b72;
+        }
+
+        .code-function {
+            color: #d2a8ff;
+        }
+
+        .code-string {
+            color: #a5d6ff;
+        }
+
+        .code-number {
+            color: #79c0ff;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #0d1117;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border: 1px solid #30363d;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .status-value {
             font-size: 1.2rem;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        
-        .high-score {
-            color: #ff8a00;
             font-weight: bold;
-            font-size: 1.4rem;
-            margin: 10px 0;
+            color: #3fb950;
         }
-        
-        @keyframes moveBackground {
-            from {
-                background-position: 0 0;
-            }
-            to {
-                background-position: 100% 0;
-            }
+
+        .status-label {
+            font-size: 0.8rem;
+            color: #8b949e;
         }
-        
-        .moving-bg {
-            animation: moveBackground 20s linear infinite;
+
+        .btn {
+            display: inline-block;
+            background: #238636;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #2ea043;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #21262d;
+        }
+
+        .btn-secondary:hover {
+            background: #30363d;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #21262d;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #3fb950;
+            border-radius: 4px;
+            width: 65%;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #8b949e;
+            font-size: 0.9rem;
+            border-top: 1px solid #30363d;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
-<body class="moving-bg">
-    <div class="game-container">
-        <div class="game-header">
-            <h1 class="game-title">SUBWAY SURFERS</h1>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-train-subway"></i>
+            <span>Subway Surfers AI Trainer</span>
         </div>
-        
-        <div class="game-stats">
-            <div class="score">Score: <span id="score">0</span></div>
-            <div class="coins">Coins: <span id="coins">0</span></div>
-            <div class="high-score">High Score: <span id="high-score">0</span></div>
-        </div>
-        
-        <div class="game-canvas-container">
-            <canvas id="gameCanvas"></canvas>
-        </div>
-        
-        <div class="game-controls">
-            <button class="btn btn-start" id="startBtn">Start Game</button>
-            <button class="btn" id="pauseBtn">Pause</button>
-            <button class="btn btn-reset" id="resetBtn">Reset</button>
-        </div>
-        
-        <div class="instructions">
-            <h3>How to Play</h3>
+    </header>
+
+    <div class="container">
+        <nav>
             <ul>
-                <li>Press LEFT and RIGHT keys to move character between lanes</li>
-                <li>Press UP key to jump over obstacles</li>
-                <li>Press DOWN key to roll under barriers</li>
-                <li>Collect coins to increase your score</li>
-                <li>Avoid obstacles and trains to stay in the game</li>
+                <li><a href="#"><i class="fas fa-code"></i> AI Model</a></li>
+                <li><a href="#"><i class="fas fa-image"></i> Image Processing</a></li>
+                <li><a href="#"><i class="fas fa-gamepad"></i> Game Integration</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Training Results</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
             </ul>
+        </nav>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">AI Model Configuration</h3>
+                    <i class="fas fa-brain card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line"><span class="code-keyword">from</span> game <span class="code-keyword">import</span> Game</span>
+                    <span class="code-line"><span class="code-keyword">import</span> os</span>
+                    <span class="code-line"><span class="code-keyword">import</span> time</span>
+                    <span class="code-line"><span class="code-keyword">import</span> cv2</span>
+                    <span class="code-line"><span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np</span>
+                    <span class="code-line"><span class="code-keyword">import</span> sys</span>
+                    <span class="code-line"><span class="code-keyword">from</span> joblib <span class="code-keyword">import</span> dump, load</span>
+                    <span class="code-line"><span class="code-keyword">import</span> visualkeras</span>
+                    <span class="code-line"><span class="code-keyword">from</span> sklearn.neighbors <span class="code-keyword">import</span> KNeighborsClassifier</span>
+                    <span class="code-line"><span class="code-keyword">from</span> sklearn.linear_model <span class="code-keyword">import</span> LogisticRegression, Perceptron</span>
+                    <span class="code-line"><span class="code-keyword">from</span> sklearn.naive_bayes <span class="code-keyword">import</span> GaussianNB</span>
+                    <span class="code-line"><span class="code-keyword">from</span> sklearn.model_selection <span class="code-keyword">import</span> train_test_split</span>
+                    <span class="code-line"><span class="code-keyword">import</span> tensorflow <span class="code-keyword">as</span> tf</span>
+                </div>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span class="status-value">20</span>
+                        <span class="status-label">EPOCHS</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-value">96x96</span>
+                        <span class="status-label">IMAGE SIZE</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-value">5</span>
+                        <span class="status-label">CATEGORIES</span>
+                    </div>
+                </div>
+                <button class="btn">Train Model</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Image Processing</h3>
+                    <i class="fas fa-images card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line"><span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image</span>
+                    <span class="code-line"><span class="code-keyword">import</span> os</span>
+                    <span class="code-line"><span class="code-comment">"""</span></span>
+                    <span class="code-line"><span class="code-comment">Script for flipping all training images horizontally</span></span>
+                    <span class="code-line"><span class="code-comment">Changes labels accordingly if necessary (left becomes right, etc.)</span></span>
+                    <span class="code-line"><span class="code-comment">"""</span></span>
+                    <span class="code-line">PATH_TO_IMAGES = <span class="code-string">'images\training2'</span></span>
+                    <span class="code-line">images = []</span>
+                    <span class="code-line">labels = []</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p>Processing: 245/378 images (64.8%)</p>
+                <button class="btn">Process Images</button>
+                <button class="btn btn-secondary">Check Images</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Game Integration</h3>
+                    <i class="fas fa-gamepad card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line"><span class="code-keyword">import</span> mss</span>
+                    <span class="code-line"><span class="code-keyword">import</span> mss.tools</span>
+                    <span class="code-line"><span class="code-keyword">import</span> subprocess</span>
+                    <span class="code-line"><span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np</span>
+                    <span class="code-line"><span class="code-keyword">import</span> cv2</span>
+                    <span class="code-line"><span class="code-keyword">import</span> pyautogui</span>
+                    <span class="code-line"><span class="code-keyword">from</span> skimage.metrics <span class="code-keyword">import</span> structural_similarity</span>
+                    <span class="code-line"><span class="code-keyword">import</span> time</span>
+                    <span class="code-line"><span class="code-keyword">import</span> keyboard</span>
+                </div>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span class="status-value">750x750</span>
+                        <span class="status-label">GAME AREA</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-value">12.0</span>
+                        <span class="status-label">FPS</span>
+                    </div>
+                </div>
+                <button class="btn">Start Game Capture</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Action Mapping</h3>
+                    <i class="fas fa-keyboard card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line">ACTIONS2IDX = {</span>
+                    <span class="code-line">    <span class="code-string">'left'</span>: <span class="code-number">0</span>,</span>
+                    <span class="code-line">    <span class="code-string">'right'</span>: <span class="code-number">1</span>,</span>
+                    <span class="code-line">    <span class="code-string">'up'</span>: <span class="code-number">2</span>,</span>
+                    <span class="code-line">    <span class="code-string">'down'</span>: <span class="code-number">3</span>,</span>
+                    <span class="code-line">    <span class="code-string">'noop'</span>: <span class="code-number">4</span>,</span>
+                    <span class="code-line">    <span class="code-string">'left_flipped'</span>: <span class="code-number">1</span>,</span>
+                    <span class="code-line">    <span class="code-string">'right_flipped'</span>: <span class="code-number">0</span>,</span>
+                    <span class="code-line">    <span class="code-string">'up_flipped'</span>: <span class="code-number">2</span>}</span>
+                </div>
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span class="status-value">8</span>
+                        <span class="status-label">ACTIONS</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-value">5</span>
+                        <span class="status-label">MAPPED</span>
+                    </div>
+                </div>
+                <button class="btn">Customize Mapping</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Image Checker</h3>
+                    <i class="fas fa-check-circle card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line"><span class="code-comment"># Key mappings for image verification</span></span>
+                    <span class="code-line">esc = <span class="code-number">27</span></span>
+                    <span class="code-line">y = <span class="code-number">121</span></span>
+                    <span class="code-line">n = <span class="code-number">110</span></span>
+                    <span class="code-line">w = <span class="code-number">119</span>  <span class="code-comment"># Move to 'up' folder</span></span>
+                    <span class="code-line">a = <span class="code-number">97</span>   <span class="code-comment"># Move to 'left' folder</span></span>
+                    <span class="code-line">s = <span class="code-number">115</span>  <span class="code-comment"># Move to 'down' folder</span></span>
+                    <span class="code-line">d = <span class="code-number">100</span>  <span class="code-comment"># Move to 'right' folder</span></span>
+                </div>
+                <p>Press corresponding keys to verify or reclassify images</p>
+                <button class="btn">Start Verification</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Image Sorter</h3>
+                    <i class="fas fa-sort-alpha-down card-icon"></i>
+                </div>
+                <div class="code-block">
+                    <span class="code-line"><span class="code-keyword">import</span> os</span>
+                    <span class="code-line"><span class="code-comment">"""</span></span>
+                    <span class="code-line"><span class="code-comment">Script for quickly sorting training images</span></span>
+                    <span class="code-line"><span class="code-comment">E.g. after changing labels of certain images</span></span>
+                    <span class="code-line"><span class="code-comment">"""</span></span>
+                    <span class="code-line">PATH_TO_IMAGES = <span class="code-string">'images\training2'</span></span>
+                    <span class="code-line">images = []</span>
+                    <span class="code-line">labels = []</span>
+                </div>
+                <button class="btn">Sort Images</button>
+            </div>
         </div>
-    </div>
-    
-    <div class="modal" id="startModal">
-        <div class="modal-content">
-            <h2>SUBWAY SURFERS</h2>
-            <p>Escape from the inspector and his dog! Run as far as you can and collect coins.</p>
-            <p>Press START to begin your adventure!</p>
-            <p class="high-score">High Score: <span id="modal-high-score">0</span></p>
-            <button class="btn btn-start" id="modalStartBtn">START GAME</button>
-        </div>
+
+        <footer>
+            <p>Subway Surfers AI Training Dashboard | Created by Obulesh88</p>
+            <p>This dashboard integrates all components for training an AI to play Subway Surfers</p>
+        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-            const startBtn = document.getElementById('startBtn');
-            const pauseBtn = document.getElementById('pauseBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const scoreElement = document.getElementById('score');
-            const coinsElement = document.getElementById('coins');
-            const highScoreElement = document.getElementById('high-score');
-            const modalHighScoreElement = document.getElementById('modal-high-score');
-            const startModal = document.getElementById('startModal');
-            const modalStartBtn = document.getElementById('modalStartBtn');
-            
-            // Set canvas size
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            
-            // Game state
-            let game = {
-                running: false,
-                score: 0,
-                coins: 0,
-                highScore: 0,
-                speed: 5,
-                lanes: [canvas.width/4, canvas.width/2, 3*canvas.width/4],
-                currentLane: 1,
-                obstacles: [],
-                coinsList: [],
-                lastTimestamp: 0
-            };
-            
-            // Load high score from localStorage
-            if (localStorage.getItem('highScore')) {
-                game.highScore = parseInt(localStorage.getItem('highScore'));
-                highScoreElement.textContent = game.highScore;
-                modalHighScoreElement.textContent = game.highScore;
-            }
-            
-            // Player character
-            const player = {
-                x: game.lanes[game.currentLane],
-                y: canvas.height - 100,
-                width: 40,
-                height: 60,
-                color: '#FF8A00',
-                isJumping: false,
-                isRolling: false,
-                jumpHeight: 120,
-                jumpSpeed: 0,
-                rollTime: 0
-            };
-            
-            // Show start modal initially
-            startModal.style.display = 'flex';
-            
-            // Event listeners
-            modalStartBtn.addEventListener('click', startGame);
-            startBtn.addEventListener('click', startGame);
-            pauseBtn.addEventListener('click', togglePause);
-            resetBtn.addEventListener('click', resetGame);
-            
-            window.addEventListener('keydown', function(e) {
-                if (!game.running) return;
-                
-                switch(e.key) {
-                    case 'ArrowLeft':
-                        if (game.currentLane > 0) game.currentLane--;
-                        break;
-                    case 'ArrowRight':
-                        if (game.currentLane < 2) game.currentLane++;
-                        break;
-                    case 'ArrowUp':
-                        if (!player.isJumping && !player.isRolling) {
-                            player.isJumping = true;
-                            player.jumpSpeed = -15;
-                        }
-                        break;
-                    case 'ArrowDown':
-                        if (!player.isJumping && !player.isRolling) {
-                            player.isRolling = true;
-                            player.rollTime = 0;
-                        }
-                        break;
-                }
-            });
-            
-            function startGame() {
-                game.running = true;
-                game.score = 0;
-                game.coins = 0;
-                game.speed = 5;
-                game.obstacles = [];
-                game.coinsList = [];
-                player.x = game.lanes[game.currentLane];
-                player.y = canvas.height - 100;
-                player.isJumping = false;
-                player.isRolling = false;
-                
-                scoreElement.textContent = game.score;
-                coinsElement.textContent = game.coins;
-                
-                startModal.style.display = 'none';
-                requestAnimationFrame(gameLoop);
-            }
-            
-            function togglePause() {
-                game.running = !game.running;
-                if (game.running) {
-                    requestAnimationFrame(gameLoop);
-                }
-            }
-            
-            function resetGame() {
-                game.running = false;
-                game.score = 0;
-                game.coins = 0;
-                game.obstacles = [];
-                game.coinsList = [];
-                
-                scoreElement.textContent = game.score;
-                coinsElement.textContent = game.coins;
-                
-                startModal.style.display = 'flex';
-            }
-            
-            function gameLoop(timestamp) {
-                if (!game.running) return;
-                
-                const deltaTime = timestamp - game.lastTimestamp;
-                game.lastTimestamp = timestamp;
-                
-                // Clear canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw background
-                drawBackground();
-                
-                // Update and draw player
-                updatePlayer(deltaTime);
-                drawPlayer();
-                
-                // Generate obstacles and coins
-                if (Math.random() < 0.02) {
-                    generateObstacle();
-                }
-                
-                if (Math.random() < 0.03) {
-                    generateCoin();
-                }
-                
-                // Update and draw obstacles
-                updateObstacles();
-                drawObstacles();
-                
-                // Update and draw coins
-                updateCoins();
-                drawCoins();
-                
-                // Check collisions
-                checkCollisions();
-                
-                // Increase score and difficulty
-                game.score += 1;
-                scoreElement.textContent = Math.floor(game.score / 10);
-                
-                if (game.score % 500 === 0) {
-                    game.speed += 0.5;
-                }
-                
-                // Continue game loop
-                requestAnimationFrame(gameLoop);
-            }
-            
-            function drawBackground() {
-                // Draw sky
-                ctx.fillStyle = '#87CEEB';
-                ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-                
-                // Draw ground
-                ctx.fillStyle = '#8B4513';
-                ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-                
-                // Draw lanes
-                ctx.strokeStyle = 'white';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([20, 15]);
-                
-                for (let lane of game.lanes) {
-                    ctx.beginPath();
-                    ctx.moveTo(lane, canvas.height / 2);
-                    ctx.lineTo(lane, canvas.height);
-                    ctx.stroke();
-                }
-                
-                ctx.setLineDash([]);
-            }
-            
-            function updatePlayer(deltaTime) {
-                // Move player to current lane
-                player.x += (game.lanes[game.currentLane] - player.x) * 0.2;
-                
-                // Handle jumping
-                if (player.isJumping) {
-                    player.y += player.jumpSpeed;
-                    player.jumpSpeed += 0.8;
-                    
-                    if (player.y >= canvas.height - 100) {
-                        player.y = canvas.height - 100;
-                        player.isJumping = false;
-                        player.jumpSpeed = 0;
-                    }
-                }
-                
-                // Handle rolling
-                if (player.isRolling) {
-                    player.rollTime += deltaTime;
-                    if (player.rollTime > 1000) {
-                        player.isRolling = false;
-                    }
-                }
-            }
-            
-            function drawPlayer() {
-                ctx.save();
-                
-                if (player.isRolling) {
-                    // Draw rolling player (squashed)
-                    ctx.fillStyle = player.color;
-                    ctx.fillRect(player.x - player.width/2, player.y - player.height/3, player.width, player.height/1.5);
-                    
-                    // Draw details
-                    ctx.fillStyle = '#000';
-                    ctx.beginPath();
-                    ctx.arc(player.x, player.y - player.height/6, player.width/4, 0, Math.PI * 2);
-                    ctx.fill();
-                } else {
-                    // Draw standing/jumping player
-                    ctx.fillStyle = player.color;
-                    ctx.fillRect(player.x - player.width/2, player.y - player.height, player.width, player.height);
-                    
-                    // Draw head
-                    ctx.fillStyle = '#FFAA50';
-                    ctx.beginPath();
-                    ctx.arc(player.x, player.y - player.height + 20, 15, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                
-                ctx.restore();
-            }
-            
-            function generateObstacle() {
-                const lane = Math.floor(Math.random() * 3);
-                const type = Math.random() > 0.5 ? 'train' : 'barrier';
-                
-                game.obstacles.push({
-                    x: game.lanes[lane],
-                    y: -50,
-                    width: type === 'train' ? 60 : 40,
-                    height: type === 'train' ? 80 : 70,
-                    type: type,
-                    lane: lane,
-                    color: type === 'train' ? '#FF4B2B' : '#FFCC00'
-                });
-            }
-            
-            function generateCoin() {
-                const lane = Math.floor(Math.random() * 3);
-                
-                game.coinsList.push({
-                    x: game.lanes[lane],
-                    y: -30,
-                    radius: 15,
-                    lane: lane,
-                    collected: false
-                });
-            }
-            
-            function updateObstacles() {
-                for (let i = game.obstacles.length - 1; i >= 0; i--) {
-                    const obstacle = game.obstacles[i];
-                    obstacle.y += game.speed;
-                    
-                    // Remove obstacles that are off screen
-                    if (obstacle.y > canvas.height + 100) {
-                        game.obstacles.splice(i, 1);
-                    }
-                }
-            }
-            
-            function drawObstacles() {
-                for (let obstacle of game.obstacles) {
-                    ctx.save();
-                    ctx.fillStyle = obstacle.color;
-                    
-                    if (obstacle.type === 'train') {
-                        // Draw train obstacle
-                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height, obstacle.width, obstacle.height);
-                        
-                        // Draw train windows
-                        ctx.fillStyle = '#1a2a6c';
-                        ctx.fillRect(obstacle.x - obstacle.width/3, obstacle.y - obstacle.height + 15, obstacle.width/3, 15);
-                        ctx.fillRect(obstacle.x + obstacle.width/6, obstacle.y - obstacle.height + 15, obstacle.width/3, 15);
-                    } else {
-                        // Draw barrier obstacle
-                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height, obstacle.width, obstacle.height/3);
-                        ctx.fillRect(obstacle.x - obstacle.width/2, obstacle.y - obstacle.height + obstacle.height/2, obstacle.width, obstacle.height/3);
-                    }
-                    
-                    ctx.restore();
-                }
-            }
-            
-            function updateCoins() {
-                for (let i = game.coinsList.length - 1; i >= 0; i--) {
-                    const coin = game.coinsList[i];
-                    coin.y += game.speed;
-                    
-                    // Remove coins that are off screen
-                    if (coin.y > canvas.height + 100) {
-                        game.coinsList.splice(i, 1);
-                    }
-                }
-            }
-            
-            function drawCoins() {
-                for (let coin of game.coinsList) {
-                    if (coin.collected) continue;
-                    
-                    ctx.save();
-                    ctx.fillStyle = '#FFD700';
-                    ctx.beginPath();
-                    ctx.arc(coin.x, coin.y, coin.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    ctx.strokeStyle = '#B8860B';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    
-                    ctx.restore();
-                }
-            }
-            
-            function checkCollisions() {
-                // Player hitbox depends on state
-                let playerWidth = player.width;
-                let playerHeight = player.isRolling ? player.height/1.5 : player.height;
-                let playerY = player.isRolling ? player.y - player.height/3 : player.y - player.height;
-                
-                // Check obstacle collisions
-                for (let obstacle of game.obstacles) {
-                    if (obstacle.lane !== game.currentLane) continue;
-                    
-                    if (obstacle.y > playerY && obstacle.y - obstacle.height < playerY + playerHeight) {
-                        if (Math.abs(obstacle.x - player.x) < (obstacle.width/2 + playerWidth/2) * 0.7) {
-                            // Collision detected
-                            gameOver();
-                            return;
-                        }
-                    }
-                }
-                
-                // Check coin collisions
-                for (let coin of game.coinsList) {
-                    if (coin.collected) continue;
-                    if (coin.lane !== game.currentLane) continue;
-                    
-                    if (coin.y > playerY && coin.y < playerY + playerHeight) {
-                        if (Math.abs(coin.x - player.x) < (coin.radius + playerWidth/2) * 0.7) {
-                            coin.collected = true;
-                            game.coins += 1;
-                            coinsElement.textContent = game.coins;
-                        }
-                    }
-                }
-            }
-            
-            function gameOver() {
-                game.running = false;
-                
-                if (game.score > game.highScore) {
-                    game.highScore = game.score;
-                    localStorage.setItem('highScore', Math.floor(game.highScore / 10));
-                    highScoreElement.textContent = Math.floor(game.highScore / 10);
-                }
-                
-                startModal.style.display = 'flex';
-                modalHighScoreElement.textContent = Math.floor(game.highScore / 10);
-            }
-            
-            // Handle window resize
-            window.addEventListener('resize', function() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
+        // Simple interactivity for buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.innerHTML = 'Processing...';
+                this.style.opacity = '0.8';
+                setTimeout(() => {
+                    this.innerHTML = this.innerHTML.replace('Processing...', 'Completed!');
+                    this.style.opacity = '1';
+                    setTimeout(() => {
+                        this.innerHTML = this.innerHTML.replace('Completed!', this.textContent.includes('Train') ? 'Train Model' : 
+                            this.textContent.includes('Process') ? 'Process Images' : 
+                            this.textContent.includes('Start') ? 'Start Game Capture' : 
+                            this.textContent.includes('Customize') ? 'Customize Mapping' : 
+                            this.textContent.includes('Verification') ? 'Start Verification' : 'Sort Images');
+                    }, 1500);
+                }, 2000);
             });
         });
     </script>
